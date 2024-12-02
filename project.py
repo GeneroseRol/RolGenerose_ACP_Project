@@ -84,7 +84,7 @@ def pick_random(available_names: list, pick_history: list, all_names: list) -> N
             pick_history.clear()
             print("Names list and pick history have been reset.")
         else:
-            print("Action cancelled.")
+            print("Exit.")
 
 def pick_multiple(available_names: list, pick_history: list, all_names: list) -> None:
     if available_names:
@@ -110,7 +110,7 @@ def pick_multiple(available_names: list, pick_history: list, all_names: list) ->
             pick_history.clear()
             print("Names list and pick history have been reset.")
         else:
-            print("Action cancelled.")
+            print("Exit.")
 
 def display_pick_history(pick_history: list):
     if pick_history:
@@ -128,7 +128,7 @@ def clear_data(all_names: list, available_names: list, pick_history: list):
         pick_history.clear()
         print("Names and pick history cleared!")
     else:
-        print("Action cancelled.")
+        print("Exit.")
 
 if __name__ == "__main__":
     main()
