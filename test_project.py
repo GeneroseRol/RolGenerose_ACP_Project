@@ -3,63 +3,63 @@ import random
 
 @pytest.fixture
 def setup_names():
-    allNames = ['Gen', 'Eldon', 'Paquera']
-    availableNames = allNames[:]
-    pickHistory = []
-    return allNames, availableNames, pickHistory
+    all_names = ['Gen', 'Eldon', 'Paquera']
+    available_names = all_names[:]
+    pick_history = []
+    return all_names, available_names, pick_history
 
 def test_add_names(setup_names):
-    allNames, availableNames, pickHistory = setup_names
+    all_names, available_names, pick_history = setup_names
 
-    allNames.append('John')
-    availableNames.append('John')
-    assert 'John' in allNames
-    assert 'John' in availableNames
+    all_names.append('John')
+    available_names.append('John')
+    assert 'John' in all_names
+    assert 'John' in available_names
 
 def test_pick_random(setup_names):
-    allNames, availableNames, pickHistory = setup_names
+    allNames, available_names, pick_history = setup_names
 
-    picked_name = random.choice(availableNames)
-    availableNames.remove(picked_name)
-    pickHistory.append(picked_name)
+    picked_name = random.choice(available_names)
+    available_names.remove(picked_name)
+    pick_history.append(picked_name)
 
-    assert picked_name not in availableNames
-    assert picked_name in pickHistory
+    assert picked_name not in available_names
+    assert picked_name in pick_history
 
 def test_pick_multiple(setup_names):
-    allNames, availableNames, pickHistory = setup_names
+    all_names, available_names, pick_history = setup_names
 
     num_to_pick = 2
-    picked_names = random.sample(availableNames, num_to_pick)
+    picked_names = random.sample(available_names, num_to_pick)
     for picked in picked_names:
-        availableNames.remove(picked)
-    pickHistory.extend(picked_names)
+        available_names.remove(picked)
+    pick_history.extend(picked_names)
 
     assert len(picked_names) == num_to_pick
     for name in picked_names:
-        assert name not in availableNames
+        assert name not in available_names
     for name in picked_names:
-        assert name in pickHistory
+        assert name in pick_history
 
 def test_reset_names(setup_names):
-    allNames, availableNames, pickHistory = setup_names
+    all_names, available_names, pick_history = setup_names
 
-    availableNames[:] = allNames
-    pickHistory.clear()
+    available_names[:] = all_names
+    pick_history.clear()
 
-    assert len(availableNames) == len(allNames)
-    assert len(pickHistory) == 0
+    assert len(available_names) == len(all_names)
+    assert len(pick_history) == 0
 
 def test_clear_data(setup_names):
-    allNames, availableNames, pickHistory = setup_names
+    all_names, available_names, pick_history = setup_names
 
-    allNames.clear()
-    availableNames.clear()
-    pickHistory.clear()
+    all_names.clear()
+    available_names.clear()
+    pick_history.clear()
 
-    assert len(allNames) == 0
-    assert len(availableNames) == 0
-    assert len(pickHistory) == 0
+    assert len(all_names) == 0
+    assert len(available_names) == 0
+    assert len(pick_history) == 0
 
 if __name__ == "__main__":
     pytest.main()
