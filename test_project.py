@@ -17,7 +17,7 @@ def test_add_names(setup_names):
     assert 'John' in available_names
 
 def test_pick_random(setup_names):
-    allNames, available_names, pick_history = setup_names
+    all_names, available_names, pick_history = setup_names
 
     picked_name = random.choice(available_names)
     available_names.remove(picked_name)

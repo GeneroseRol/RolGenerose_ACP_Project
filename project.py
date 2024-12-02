@@ -1,7 +1,9 @@
 import random
 
 def main():
-    print("Welcome to the Random Name Picker!")
+    print("="*40)
+    print("    WELCOME TO THE RANDOM NAME PICKER!    ")
+    print("="*40)
     all_names = []
     available_names = []
     pick_history = []
@@ -60,7 +62,7 @@ def display_all_names(all_names: list):
         for i, name in enumerate(all_names, 1):
             print(f"{i}. {name}")
     else:
-        print("\nNo names available. Add names first.")
+        print("\nNo names available. Enter names first.")
 
 def display_available_names(available_names: list):
     if available_names:
@@ -103,7 +105,7 @@ def pick_multiple(available_names: list, pick_history: list, all_names: list) ->
             except ValueError:
                 print("\nInvalid input. Please enter a valid number.")
     else:
-        print("\nNo names available to pick from.")
+        print("\nNo names available.")
         restart = input("Would you like to start with all the names again? (yes/no): ").lower()
         if restart == 'yes':
             available_names[:] = all_names
