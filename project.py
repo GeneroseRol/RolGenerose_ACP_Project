@@ -1,11 +1,17 @@
 import random
+import csv
+import os
 
 def main():
     print("="*40)
-    print("    WELCOME TO THE RANDOM NAME PICKER!    ")
+    print("   WELCOME TO THE RANDOM NAME PICKER!    ")
     print("="*40)
-    all_names = []
-    available_names = []
+
+    csv_file = input("Enter the name of the CSV file to use: ").strip()
+    if not csv_file.endswith('.csv'):
+        csv_file += '.csv'
+
+    all_names, available_names = load_names_from_csv(csv_file)
     pick_history = []
 
     while True:
@@ -17,31 +23,46 @@ def main():
         print("5. Pick multiple random names")
         print("6. View pick history")
         print("7. Clear names list and history")
-        print("8. Exit")
+        print("8. Reset Names")
+        print("9. Exit")
 
         choice = input("Enter your choice: ")
 
         if choice == "1":
-            all_names, available_names = add_names(all_names, available_names)
+            all_names, available_names = add_names(all_names, available_names, csv_file)
         elif choice == "2":
             display_all_names(all_names)
         elif choice == "3":
             display_available_names(available_names)
         elif choice == "4":
-            pick_random(available_names, pick_history, all_names)
+            pick_random(available_names, pick_history)
         elif choice == "5":
-            pick_multiple(available_names, pick_history, all_names)
+            pick_multiple(available_names, pick_history)
         elif choice == "6":
             display_pick_history(pick_history)
         elif choice == "7":
             clear_data(all_names, available_names, pick_history)
         elif choice == "8":
+            reset_names(all_names, available_names, pick_history)
+        elif choice == "9":
             print("Thank you and Goodbye!")
             break
         else:
             print("Invalid choice. Please try again.")
 
-def add_names(all_names: list, available_names: list) -> tuple:
+def load_names_from_csv(csv_file):
+    if not os.path.exists(csv_file):
+        return [], []
+
+    all_names = []
+    with open(csv_file, "r") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row:
+                all_names.append(row[0])
+    return all_names, all_names[:]
+
+def add_names(all_names: list, available_names: list, csv_file: str) -> list:
     print("\nEnter names (type 'done' to stop):")
     while True:
         name = input("> ").strip()
@@ -50,11 +71,17 @@ def add_names(all_names: list, available_names: list) -> tuple:
         elif name and name not in all_names:
             all_names.append(name)
             available_names.append(name)
+            save_name_to_csv(csv_file, name)
         elif not name:
             print("Name cannot be empty. Please enter a name.")
         else:
             print(f"{name} is already in the list.")
     return all_names, available_names
+
+def save_name_to_csv(csv_file, name):
+    with open(csv_file, "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([name])
 
 def display_all_names(all_names: list):
     if all_names:
@@ -72,7 +99,7 @@ def display_available_names(available_names: list):
     else:
         print("\nNo available names. Add names first.")
 
-def pick_random(available_names: list, pick_history: list, all_names: list) -> None:
+def pick_random(available_names: list, pick_history: list) -> None:
     if available_names:
         name = random.choice(available_names)
         available_names.remove(name)
@@ -80,15 +107,8 @@ def pick_random(available_names: list, pick_history: list, all_names: list) -> N
         print(f"\nRandomly picked: {name}")
     else:
         print("\nNo names available to pick from.")
-        restart = input("Would you like to start with all the names again? (yes/no): ").lower()
-        if restart == 'yes':
-            available_names[:] = all_names
-            pick_history.clear()
-            print("Names list and pick history have been reset.")
-        else:
-            print("Exit.")
 
-def pick_multiple(available_names: list, pick_history: list, all_names: list) -> None:
+def pick_multiple(available_names: list, pick_history: list) -> None:
     if available_names:
         while True:
             try:
@@ -106,13 +126,6 @@ def pick_multiple(available_names: list, pick_history: list, all_names: list) ->
                 print("\nInvalid input. Please enter a valid number.")
     else:
         print("\nNo names available.")
-        restart = input("Would you like to start with all the names again? (yes/no): ").lower()
-        if restart == 'yes':
-            available_names[:] = all_names
-            pick_history.clear()
-            print("Names list and pick history have been reset.")
-        else:
-            print("Exit.")
 
 def display_pick_history(pick_history: list):
     if pick_history:
@@ -121,6 +134,15 @@ def display_pick_history(pick_history: list):
             print(f"{i}. {name}")
     else:
         print("\nNo names have been picked yet.")
+
+def reset_names(all_names: list, available_names: list, pick_history: list):
+    restart = input("\nWould you like to start with all the names again? (yes/no): ").lower()
+    if restart == 'yes':
+        available_names[:] = all_names
+        pick_history.clear()
+        print("Names list and pick history have been reset.")
+    else:
+        print("Exit.")
 
 def clear_data(all_names: list, available_names: list, pick_history: list):
     confirm = input("\nAre you sure you want to clear all names and pick history? (yes/no): ").lower()
